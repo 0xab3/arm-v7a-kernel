@@ -1,0 +1,30 @@
+.section .text
+.global _Reset
+_Reset:
+    b .                          /* 0x0  Reset */
+    b .                          /* 0x4  Undefined Instruction */
+    ldr pc, =Software_Exception  /* 0x8  Software Interrupt */
+    b .                          /* 0xC  Prefetch Abort */
+    b .                          /* 0x10 Data Abort */
+    b .                          /* 0x14 Reserved */
+    ldr pc, =IrqHandler          /* 0x18 IRQ */
+    b .                          /* 0x1C FIQ */
+
+
+.global Software_Exception
+Software_Exception:
+    ldr pc, =soft_inter          /* 0x18 IRQ */
+
+.global IrqHandler
+IrqHandler:
+    ldr r0, =0x10009000
+    ldr r1, [r0]
+#     b .
+
+.global _start
+_start:
+    ldr sp, =STACK_TOP
+    bl start
+
+
+.size _start, . - _start
